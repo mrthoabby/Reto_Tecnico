@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace ReadConcurrent
 {
@@ -6,8 +7,26 @@ namespace ReadConcurrent
 	{
 		static void Main(string[] args)
 		{
+			Thread hilo1 = new Thread(ejemplo1);
+			//Thread hil21 = new Thread(prueba);
 
-			Console.WriteLine(ControladorFile.ejemplo);
+			hilo1.Start();
+			//hil21.Start();
+			void ejemplo1()
+			{
+				ControladorFile.metodo("HILO1");
+			}
+
+			ControladorFile.metodo("Main");
+			//void prueba()
+			//{
+			//	for (int i = 0 ; i < 10 ; i++)
+			//	{
+			//		Console.WriteLine($"Prueba {i}");
+			//		Thread.Sleep(5000);
+			//	}
+			//}
+
 		}
 	}
 }
