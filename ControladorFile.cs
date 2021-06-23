@@ -15,6 +15,8 @@ namespace ReadConcurrent
 	static class ControladorFile
 	{
 		private static readonly ReaderWriterLockSlim blokeotoFile = new();
+		private static readonly string ruta_quijote = @"C:\Users\Danis\Documents\codigo\ReadConcurrent\el_quijote.txt";
+
 
 		/// <summary>
 		/// Lee el archivo de recurso de texto y retorna parcialmente partes del mismo usando yield
@@ -24,7 +26,9 @@ namespace ReadConcurrent
 		/// </returns>
 		internal static IEnumerable<string> Lector()
 		{
-			using (FileStream flujodeTexto = File.Open(@"C:\Users\Danis\Documents\codigo\ReadConcurrent\el_quijote.txt" , FileMode.Open , FileAccess.Read , FileShare.Read))
+			
+
+			using (FileStream flujodeTexto = File.Open(ruta_quijote, FileMode.Open , FileAccess.Read , FileShare.Read))
 			{
 				byte[] conjuntodeBytes = new byte[flujodeTexto.Length]; //Se lee todo el archivo para mantener congruencia en los datos en validacion de oraciones sin embargo se mantiene extructura yield en caso de implementar solucion alternativa para leer archivo por partes, pensando en el rendimiento de maquinas con pocos recursos
 				while (flujodeTexto.Read(conjuntodeBytes , 0 , conjuntodeBytes.Length) > 0)
@@ -32,6 +36,7 @@ namespace ReadConcurrent
 					yield return Encoding.UTF8.GetString(conjuntodeBytes).Normalize();
 				}
 			}
+	
 		}
 
 		/// <summary>
