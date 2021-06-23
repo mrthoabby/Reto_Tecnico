@@ -35,21 +35,36 @@ namespace ReadConcurrent
 			return texto.Split('.').Count(tense => tense != "" && tense[^1] != '▄' && tense.Split(' ').Count(subpalabra => subpalabra.isword() ) > 15);
 		}
 
+		/// <summary>
+		/// Cuenta la cantidad de parrafos en un array de string
+		/// </summary>
+		///<remarks>
+		///Toma un array de <see cref="string"/> que fue preparado por el metodo <see cref="preparadodeSentenses(string)"/>
+		///<para>para determinar cuantos parrafos existen en este array  EL el cual deja el valor <value>.▄</value> donde hay un punto y aparte  </para>
+		/// </remarks>
+		/// <param name="sentenses">Arrays con parrafos</param>
+		/// <returns>Retorna un <see cref="int"/> con la cantidad de parrafos en el Arrego de <see cref="string"/> recibido</returns>
 		internal static int ContadordeParrafos(this string[] sentenses)
 		{
+			
 			return sentenses.Count(parrafo => parrafo.Length > 0 && parrafo.Replace(".▄","█")[^1] == '█');
 			
 		}
+
 
 		internal static string[] preparadodeSentenses(this string texto)
 		{
 			return texto.CleanText('.' , false).Split("▀");
 		}
+
 		/// <summary>
-		/// Toma un string y se encarga de hacer limpieza dejando solo caracteres alfanumericos, espacios en blancos y un caracter  <see langword="exepcion"/> pasado como argumento.
+		/// Toma un string y se encarga de hacer limpieza o filtrado dejando solo caracteres alfanumericos, espacios en blancos y un caracter  <see langword="exepcion"/> pasado como argumento.
 		/// </summary>
-		/// <param name="texto">El texto recibido para limpiar</param>
-		/// <param name="exepcion">Toma un caracter para tomarlo como una exepcion y no ser eliminado "El caracter por defecto es el espacio en blanco"</param>
+		/// <remarks>
+		/// Cuando el parametro <paramref name="saltodeLinea"/> esta establecido en <see cref="false"/> omite los caracteres  el filtrado de los caracteres <c>'▀' y '▄'</c> 
+		/// </remarks>
+		/// <param name="texto">El texto recibido para Filtra</param>
+		/// <param name="exepcion">Toma un caracter como exepcion para no ser filtrado "El caracter por defecto es el espacio en blanco"</param>
 		/// <returns>Retorna un string con caracteres alfanumericos, espacios en blancos y un caracter seleccionado</returns>
 		internal static string CleanText(this string texto , char exepcion = ' ' , bool saltodeLinea = true)
 		{
