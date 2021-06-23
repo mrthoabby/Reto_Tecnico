@@ -4,8 +4,10 @@ namespace ReadConcurrent
 {
 	/// <summary>
 	/// Clase Herramientas
-	/// Provee todos las Herramientas para gestionar y ralizar busquedas en objetos tipo strings
 	/// </summary>
+	/// <remarks>
+	/// Provee todos las herramientas para gestionar analizar y realizar busquedas en objetos tipo <code>string</code>
+	/// </remarks>
 	static class Herramientas
 	{
 		internal static int words_end_In_N = 0;
@@ -20,9 +22,14 @@ namespace ReadConcurrent
 		/// </summary>
 		/// <param name="texto">El texto en donce se contaran las palabras</param>
 		/// <param name="find">Caracter a encontrar al final de cada palabra</param>
-		/// <returns>Un entero con la cantidad de palabras terminadas en el caracter buscado</returns>
+		/// <returns>Retorna un <see cref="int"/> con la cantidad de palabras terminadas en el caracter buscado</returns>
 		internal static int ContadorEnd(this string texto , char find) => texto.ToLower().Split(" ").Count(x => x.Length > 0 && x[^1] == char.ToLower(find));
 
+		/// <summary>
+		/// Cuenta la cantidad de parrafos que contengan oraciones con mas de 15 palabras
+		/// </summary>
+		/// <param name="texto">Recibe un <see cref="string"/> Con el texto a analizar</param>
+		/// <returns></returns>
 		internal static int ContadorSentences(this string texto)
 		{
 			return texto.Split('.').Count(tense => tense != "" && tense[^1] != '▄' && tense.Split(' ').Count(subpalabra => subpalabra.isword() ) > 15);
