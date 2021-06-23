@@ -29,7 +29,7 @@ namespace ReadConcurrent
 		/// Cuenta la cantidad de parrafos que contengan oraciones con mas de 15 palabras
 		/// </summary>
 		/// <param name="texto">Recibe un <see cref="string"/> Con el texto a analizar</param>
-		/// <returns></returns>
+		/// <returns><see cref="int"/> con la cantidad de parracion con oraciones de mas de 15 palabras</returns>
 		internal static int ContadorSentences(this string texto)
 		{
 			return texto.Split('.').Count(tense => tense != "" && tense[^1] != '▄' && tense.Split(' ').Count(subpalabra => subpalabra.isword() ) > 15);
@@ -48,10 +48,15 @@ namespace ReadConcurrent
 		{
 			
 			return sentenses.Count(parrafo => parrafo.Length > 0 && parrafo.Replace(".▄","█")[^1] == '█');
+			//Se modifica el identificador de parrafo .▄ por un solo char █
 			
 		}
 
-
+		/// <summary>
+		/// Prepara un array de <see cref="string"/> para poder ser leido por el metodo <see cref="ContadordeParrafos(string[])"/>
+		/// </summary>
+		/// <param name="texto"></param>
+		/// <returns>Array de <see cref="string"/> Con indicador de parrafo al final el cual sería <c>.▄</c></returns>
 		internal static string[] preparadodeSentenses(this string texto)
 		{
 			return texto.CleanText('.' , false).Split("▀");
@@ -61,7 +66,7 @@ namespace ReadConcurrent
 		/// Toma un string y se encarga de hacer limpieza o filtrado dejando solo caracteres alfanumericos, espacios en blancos y un caracter  <see langword="exepcion"/> pasado como argumento.
 		/// </summary>
 		/// <remarks>
-		/// Cuando el parametro <paramref name="saltodeLinea"/> esta establecido en <see cref="false"/> omite los caracteres  el filtrado de los caracteres <c>'▀' y '▄'</c> 
+		/// Cuando el parametro <paramref name="saltodeLinea"/> esta establecido en <see cref="false"/> omite el filtrado de los caracteres <c>'▀' y '▄'</c> 
 		/// </remarks>
 		/// <param name="texto">El texto recibido para Filtra</param>
 		/// <param name="exepcion">Toma un caracter como exepcion para no ser filtrado "El caracter por defecto es el espacio en blanco"</param>
@@ -74,18 +79,19 @@ namespace ReadConcurrent
 				return new string(texto.GarbajeRecolectorText(saltodeLinea).Where(valor => valor == ' ' || valor == exepcion || valor == '▄' || valor == '▀'  || char.IsLetterOrDigit(valor)).ToArray()).Trim();
 		}
 
-
-
-		//internal static string RemoveLetter()
-		//{
-
-		//}
-
 		/// <summary>
-		/// Limpia un string de caracteres en blancos dobles, triples y de el caracter de escape salto de linea
+		/// Limpia un string de caracteres en blancos dobles, triples y de el caracter de escape salto de linea o remplaza estos caracteres por valores especiales para el reconocimiento de parrafos y oraciones
 		/// </summary>
+		/// <remarks>
+		/// Puede retornar un string sin espacios en blancos dobles o triples y sin saltos de linea o un string con los saltos de linea remplazados por valores especiales, Util para servir de guia y determinar cuando hay un punto y aparte o un punto seguido debido a que un punto y aparte siempre tiene un salto de linea y el punto seguido no
+		/// </remarks>
 		/// <param name="texto">El texto a limipar</param>
-		/// <returns>un string sin espacios dobles o triples y sin saltos de linea</returns>
+		/// <returns>un <code>
+		/// si el parametro <paramref name="salto"/> es igual a <see langword="true"/> devuelve un <see cref="string"/> sin espacios en blanco dobles o triples y sin saltos de
+		/// linea<para>Si el parametro <paramref name="salto"/> es igual a <see langword="false"/> devuelve
+		/// un <see cref="string"/> Sin espacios en blanco dobles o triples y con los saltos de linea rempladados por ▄▀
+		/// </para>
+		/// </code> </returns>
 		private static string GarbajeRecolectorText(this string texto, bool salto)
 		{
 			string textToClear = "";
@@ -107,6 +113,11 @@ namespace ReadConcurrent
 			return textToClear;
 		}
 
+		/// <summary>
+		/// Determina si un <see cref="string"/> está vacio o si contine digitos
+		/// </summary>
+		/// <param name="word"></param>
+		/// <returns><see cref="true"/> unicamente cuando el string no contiene números y es diferente de string vacio </returns>
 		internal static bool isword(this string word)
 		{
 			return !(word == "") || !word.Any(letra => char.IsDigit(letra));
