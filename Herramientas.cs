@@ -30,37 +30,25 @@ namespace ReadConcurrent
 		/// </summary>
 		/// <param name="texto">Recibe un <see cref="string"/> Con el texto a analizar</param>
 		/// <returns><see cref="int"/> con la cantidad de parracion con oraciones de mas de 15 palabras</returns>
-		internal static int ContadorSentences(this string texto)
-		{
-			return texto.Split('.').Count(tense => tense != "" && tense[^1] != '▄' && tense.Split(' ').Count(subpalabra => subpalabra.isword() ) > 15);
-		}
+		internal static int ContadorSentences(this string texto) => texto.Split('.').Count(tense => tense != "" && tense[^1] != '▄' && tense.Split(' ').Count(subpalabra => subpalabra.Isword()) > 15);
 
 		/// <summary>
 		/// Cuenta la cantidad de parrafos en un array de string
 		/// </summary>
 		///<remarks>
-		///Toma un array de <see cref="string"/> que fue preparado por el metodo <see cref="preparadodeSentenses(string)"/>
+		///Toma un array de <see cref="string"/> que fue preparado por el metodo <see cref="PreparadodeSentenses(string)"/>
 		///<para>para determinar cuantos parrafos existen en este array  EL el cual deja el valor <value>.▄</value> donde hay un punto y aparte  </para>
 		/// </remarks>
 		/// <param name="sentenses">Arrays con parrafos</param>
 		/// <returns>Retorna un <see cref="int"/> con la cantidad de parrafos en el Arrego de <see cref="string"/> recibido</returns>
-		internal static int ContadordeParrafos(this string[] sentenses)
-		{
-			
-			return sentenses.Count(parrafo => parrafo.Length > 0 && parrafo.Replace(".▄","█")[^1] == '█');
-			//Se modifica el identificador de parrafo .▄ por un solo char █
-			
-		}
+		internal static int ContadordeParrafos(this string[] sentenses) => sentenses.Count(parrafo => parrafo.Length > 0 && parrafo.Replace(".▄" , "█")[^1] == '█');//Se modifica el identificador de parrafo .▄ por un solo char █
 
 		/// <summary>
 		/// Prepara un array de <see cref="string"/> para poder ser leido por el metodo <see cref="ContadordeParrafos(string[])"/>
 		/// </summary>
 		/// <param name="texto"></param>
 		/// <returns>Array de <see cref="string"/> Con indicador de parrafo al final el cual sería <c>.▄</c></returns>
-		internal static string[] preparadodeSentenses(this string texto)
-		{
-			return texto.CleanText('.' , false).Split("▀");
-		}
+		internal static string[] PreparadodeSentenses(this string texto) => texto.CleanText('.' , false).Split("▀");
 
 		/// <summary>
 		/// Toma un string y se encarga de hacer limpieza o filtrado dejando solo caracteres alfanumericos, espacios en blancos y un caracter  <see langword="exepcion"/> pasado como argumento.
@@ -73,10 +61,9 @@ namespace ReadConcurrent
 		/// <returns>Retorna un string con caracteres alfanumericos, espacios en blancos y un caracter seleccionado</returns>
 		internal static string CleanText(this string texto , char exepcion = ' ' , bool saltodeLinea = true)
 		{
-			if(saltodeLinea)
-			return new string(texto.GarbajeRecolectorText(saltodeLinea).Where(valor => valor == ' ' || valor == exepcion || char.IsLetterOrDigit(valor)).ToArray()).Trim();
-			else
-				return new string(texto.GarbajeRecolectorText(saltodeLinea).Where(valor => valor == ' ' || valor == exepcion || valor == '▄' || valor == '▀'  || char.IsLetterOrDigit(valor)).ToArray()).Trim();
+			return saltodeLinea
+				? new string(texto.GarbajeRecolectorText(saltodeLinea).Where(valor => valor == ' ' || valor == exepcion || char.IsLetterOrDigit(valor)).ToArray()).Trim()
+				: new string(texto.GarbajeRecolectorText(saltodeLinea).Where(valor => valor == ' ' || valor == exepcion || valor == '▄' || valor == '▀' || char.IsLetterOrDigit(valor)).ToArray()).Trim();
 		}
 
 		/// <summary>
@@ -92,7 +79,7 @@ namespace ReadConcurrent
 		/// un <see cref="string"/> Sin espacios en blanco dobles o triples y con los saltos de linea rempladados por ▄▀
 		/// </para>
 		/// </code> </returns>
-		private static string GarbajeRecolectorText(this string texto, bool salto)
+		private static string GarbajeRecolectorText(this string texto , bool salto)
 		{
 			string textToClear = "";
 			if (salto)
@@ -118,10 +105,7 @@ namespace ReadConcurrent
 		/// </summary>
 		/// <param name="word"></param>
 		/// <returns><see cref="true"/> unicamente cuando el string no contiene números y es diferente de string vacio </returns>
-		internal static bool isword(this string word)
-		{
-			return !(word == "") || !word.Any(letra => char.IsDigit(letra));
-		}
+		internal static bool Isword(this string word) => !(word == "") || !word.Any(letra => char.IsDigit(letra));
 
 
 	}
